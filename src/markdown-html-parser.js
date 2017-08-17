@@ -124,6 +124,16 @@ export default (string, options) => {
 
 				}
 			}
+
+			// LIST
+
+			if (title === "list") {
+				const {
+					className,
+				} = option
+				const reg = new RegExp('^(\\d*\\.)\\s?(.+)', 'gim')
+				newString = replaceString(newString, reg, className)
+			}
 		}
 	})
 	return newString
