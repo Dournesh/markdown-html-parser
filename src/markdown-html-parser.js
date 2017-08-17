@@ -1,22 +1,103 @@
+import fontsChecking from './fonts/check-font'
+import replaceString from './replace-string'
+import regulars from './regulars'
+
 export default (string, options) => {
-    return (
-        string
-            .replace(/^#\s(.+)/gim, '<span class="h1">$1</span>')
-            .replace(/^#{2}\s(.+)/gim, '<span class="h2">$1</span>')
-            .replace(/^#{3}\s(.+)/gim, '<span class="h3">$1</span>')
-            .replace(/^#{4}\s(.+)/gim, '<span class="h4">$1</span>')
-            .replace(/^#{5}\s(.+)/gim, '<span class="h5">$1</span>')
-            .replace(/^#{6}\s(.+)/gim, '<span class="h6">$1</span>')
-            .replace(/^[*+-]\s([^*].+)/gim, '<li class="li">$1</li>')
-            .replace(/^(\*{3,}|-{3,})$/gim, '<div class="hr"></div>')
-            .replace(/\*\*\s?([^*].+?)\s?\*\*/gim, '<span class="bold">$1</span>')
-            .replace(/__\s?([^_].+?)\s?__/gim, '<span class="bold">$1</span>')
-            .replace(/\*\s?([^*].+?)\s?\*/gim, '<span class="inclined">$1</span>')
-            .replace(/_\s?([^_].+?)\s?_/gim, '<span class="inclined">$1</span>')
-            .replace(/^(\d*\.)\s?(.+)/gim, '<span class="list">$1 $2</span>')
-            .replace(/(?:^|\s|\n|[\wа-яА-Я0-9])\[(.+)\]\((.+)\s["'](.+)["']\)/gim, '<a href="$2" title="$3">$1</a>')
-            .replace(/!\[(.+)\]\((.+)\s["'](.+)["']\)/gim, '<img src="$2" alt="$1" title="$3"/>')
-            .replace(/`{1,2}<(.+)>`{1,2}/gim, '<span class="code">&lt;$1&gt;</span>')
-            .replace(/^>\s(.+)/gim, '<span class="blockquote">&lt;$1&gt;</span>')
-    )
+	let newString = string
+	options.forEach(option => {
+		const {
+			title,
+			included,
+		} = option
+
+		// HEADERS
+
+		if (title === 'headers' && included === true) {
+			const {
+				level,
+				levels,
+			} = option
+			if (typeof level === 'object' && !Array.isArray(level)) {
+				const {
+					number,
+					className,
+				} = option.level
+				const reg = new RegExp('^#{' + number + '}\\s(.+)', 'gim')
+				newString = replaceString(newString, reg, className)
+			}
+			if (typeof levels === 'object' && Array.isArray(levels)) {
+				levels.forEach(level => {
+					const {
+						number,
+						className,
+					} = level
+					const reg = new RegExp('^#{' + number + '}\\s(.+)', 'gim')
+					newString = replaceString(newString, reg, className)
+				})
+			}
+			if (levels === 'all') {
+				const {
+					classNames,
+				} = option
+				if (typeof classNames === 'object' && !Array.isArray(classNames)) {
+					Object
+						.keys(classNames)
+						.forEach((key, index) => {
+							const newIndex = index + 1
+							const reg = new RegExp('^#{' + newIndex + '}\\s(.+)', 'gim')
+							newString = replaceString(newString, reg, classNames[key])
+						})
+				}
+			}
+		}
+
+		// FONT CHECKING
+
+		if (title === 'font' && included === true) {
+			const {
+				font,
+				fonts,
+			} = option
+			if (typeof font === 'object' && !Array.isArray(font)) {
+				newString = fontsChecking(font, newString)
+			}
+			if (typeof fonts === 'object' && Array.isArray(fonts)) {
+				fonts.forEach(font => {
+					newString = fontsChecking(font, newString)
+				})
+			}
+			if (fonts === 'all') {
+				const {
+					classNames
+				} = option
+				Object
+					.keys(classNames)
+					.forEach((key, index) => {
+						const newIndex = index + 1
+						if (key === "bold") {
+							regulars.bold.forEach(reg => {
+								newString = replaceString(newString, reg, classNames[key])
+							})
+						}
+						if (key === "inclined") {
+							regulars.inclined.forEach(reg => {
+								newString = replaceString(newString, reg, classNames[key])
+							})
+						}
+						if (key === "strike") {
+							newString = replaceString(newString, regulars.strike, classNames[key])
+						}
+					})
+			}
+		}
+	})
+	return newString
 }
+
+// const regs = [
+// 	/\\*\\*\\s?([^*].+?)\\s?\\*\\*/gim,
+// 	/__\\s?([^*].+?)\\s?__/gim,
+// 	/\\*\\s?([^*].+?)\\s?\\*/gim,
+// 	/_\\s?([^*].+?)\\s?_/gim,
+// 	/~~\\s?(.+?)\\s?~~/gim,
+// ]
