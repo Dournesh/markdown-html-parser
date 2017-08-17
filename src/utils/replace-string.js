@@ -15,6 +15,16 @@ export default (string, reg, className, meta) => {
 					return generateParsedString(className, title, {type, title, url, alt})
 				}
 			)
+	} else if (type === 'image') {
+		return string
+			.replace(
+				reg,
+				(...args) => {
+					const alt = args[1]
+					const url = args[2]
+					return generateParsedString(className, null, {type, url, alt})
+				}
+			)
 	} else {
 		return string
 			.replace(

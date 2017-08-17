@@ -127,7 +127,7 @@ export default (string, options) => {
 
 			// LIST
 
-			if (title === "list") {
+			if (title === 'list') {
 				const {
 					className,
 				} = option
@@ -137,11 +137,21 @@ export default (string, options) => {
 
 			// LINK
 
-			if (title === "link") {
+			if (title === 'link') {
 				const {
 					className,
 				} = option
-				const reg = new RegExp('(?:^|\\s|\\n|[\\wа-яА-Я0-9])\\[(.+)\\]\\((.+)\\s["\'](.+)["\']\\)', 'gim')
+				const reg = new RegExp('\\[(.+)\\]\\((.+)\\s["\'](.+)["\']\\)', 'gim')
+				newString = replaceString(newString, reg, className, {type: title})
+			}
+
+			// IMAGE
+
+			if (title === 'image') {
+				const {
+					className,
+				} = option
+				const reg = new RegExp('!\\[(.+)\\]\\((.+)\\)', 'gim')
 				newString = replaceString(newString, reg, className, {type: title})
 			}
 		}
