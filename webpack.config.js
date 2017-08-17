@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-    entry: path.resolve(__dirname, './lib/markdown-html-parser.js'),
+    entry: path.resolve(__dirname, './src/markdown-html-parser.js'),
 
     output: {
         path: path.resolve(__dirname, './lib'),
