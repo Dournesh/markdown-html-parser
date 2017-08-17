@@ -106,6 +106,24 @@ export default (string, options) => {
 					newString = replaceString(newString, reg, className, true)
 				}
 			}
+
+			// LI
+
+			if (title === 'li') {
+				const {
+					className,
+					allowed
+				} = option
+				if (allowed === 'all') {
+					const reg = new RegExp('^[*+-]\\s([^*].+)', 'gim')
+					newString = replaceString(newString, reg, className)
+				} else if (typeof allowed === 'string') {
+					const reg = new RegExp('^\\' + allowed + '\\s([^*].+)', 'gim')
+					newString = replaceString(newString, reg, className)
+				} else {
+
+				}
+			}
 		}
 	})
 	return newString
