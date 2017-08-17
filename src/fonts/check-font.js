@@ -1,4 +1,4 @@
-import replaceString from '../replace-string'
+import replaceString from '../utils/replace-string'
 
 export default (font, newString) => {
 	const {
