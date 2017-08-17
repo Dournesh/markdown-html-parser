@@ -23,7 +23,7 @@ export default (string, options) => {
 						className,
 					} = option.level
 					const reg = new RegExp('^#{' + number + '}\\s(.+)', 'gim')
-					newString = replaceString(newString, reg, className)
+					newString = replaceString(newString, reg, className, {type: title})
 				}
 				if (typeof levels === 'object' && Array.isArray(levels)) {
 					levels.forEach(level => {
@@ -32,7 +32,7 @@ export default (string, options) => {
 							className,
 						} = level
 						const reg = new RegExp('^#{' + number + '}\\s(.+)', 'gim')
-						newString = replaceString(newString, reg, className)
+						newString = replaceString(newString, reg, className, {type: title})
 					})
 				}
 				if (levels === 'all') {
@@ -45,7 +45,7 @@ export default (string, options) => {
 							.forEach((key, index) => {
 								const newIndex = index + 1
 								const reg = new RegExp('^#{' + newIndex + '}\\s(.+)', 'gim')
-								newString = replaceString(newString, reg, classNames[key])
+								newString = replaceString(newString, reg, classNames[key], {type: title})
 							})
 					}
 				}
@@ -76,16 +76,16 @@ export default (string, options) => {
 							const newIndex = index + 1
 							if (key === 'bold') {
 								regulars.bold.forEach(reg => {
-									newString = replaceString(newString, reg, classNames[key])
+									newString = replaceString(newString, reg, classNames[key], {type: title})
 								})
 							}
 							if (key === 'inclined') {
 								regulars.inclined.forEach(reg => {
-									newString = replaceString(newString, reg, classNames[key])
+									newString = replaceString(newString, reg, classNames[key], {type: title})
 								})
 							}
 							if (key === 'strike') {
-								newString = replaceString(newString, regulars.strike, classNames[key])
+								newString = replaceString(newString, regulars.strike, classNames[key], {type: title})
 							}
 						})
 				}
@@ -100,10 +100,10 @@ export default (string, options) => {
 				} = option
 				if (allowed === 'all') {
 					const reg = new RegExp('^(\\*{3,}|-{3,})$', 'gim')
-					newString = replaceString(newString, reg, className, true)
+					newString = replaceString(newString, reg, className, {type: title})
 				} else if (typeof allowed === 'string') {
 					const reg = new RegExp('^(\\' + allowed + '{3,})$', 'gim')
-					newString = replaceString(newString, reg, className, true)
+					newString = replaceString(newString, reg, className, {type: title})
 				}
 			}
 
@@ -115,11 +115,11 @@ export default (string, options) => {
 					allowed
 				} = option
 				if (allowed === 'all') {
-					const reg = new RegExp('^[*+-]\\s([^*].+)', 'gim')
-					newString = replaceString(newString, reg, className)
+					const reg = new RegExp('^[*+-]\\s([^*]+)', 'gim')
+					newString = replaceString(newString, reg, className, {type: title})
 				} else if (typeof allowed === 'string') {
 					const reg = new RegExp('^\\' + allowed + '\\s([^*].+)', 'gim')
-					newString = replaceString(newString, reg, className)
+					newString = replaceString(newString, reg, className, {type: title})
 				} else {
 
 				}
@@ -132,7 +132,17 @@ export default (string, options) => {
 					className,
 				} = option
 				const reg = new RegExp('^(\\d*\\.)\\s?(.+)', 'gim')
-				newString = replaceString(newString, reg, className)
+				newString = replaceString(newString, reg, className, {type: title})
+			}
+
+			// LINK
+
+			if (title === "link") {
+				const {
+					className,
+				} = option
+				const reg = new RegExp('(?:^|\\s|\\n|[\\wа-яА-Я0-9])\\[(.+)\\]\\((.+)\\s["\'](.+)["\']\\)', 'gim')
+				newString = replaceString(newString, reg, className, {type: title})
 			}
 		}
 	})
