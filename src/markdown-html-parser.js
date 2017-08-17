@@ -1,5 +1,5 @@
 import fontsChecking from './fonts/check-font'
-import replaceString from './replace-string'
+import replaceString from './utils/replace-string'
 import regulars from './regulars'
 
 export default (string, options) => {
