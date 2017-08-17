@@ -11,93 +11,102 @@ export default (string, options) => {
 		} = option
 
 		// HEADERS
-
-		if (title === 'headers' && included === true) {
-			const {
-				level,
-				levels,
-			} = option
-			if (typeof level === 'object' && !Array.isArray(level)) {
+		if (included === true) {
+			if (title === 'headers') {
 				const {
-					number,
-					className,
-				} = option.level
-				const reg = new RegExp('^#{' + number + '}\\s(.+)', 'gim')
-				newString = replaceString(newString, reg, className)
-			}
-			if (typeof levels === 'object' && Array.isArray(levels)) {
-				levels.forEach(level => {
+					level,
+					levels,
+				} = option
+				if (typeof level === 'object' && !Array.isArray(level)) {
 					const {
 						number,
 						className,
-					} = level
+					} = option.level
 					const reg = new RegExp('^#{' + number + '}\\s(.+)', 'gim')
 					newString = replaceString(newString, reg, className)
-				})
+				}
+				if (typeof levels === 'object' && Array.isArray(levels)) {
+					levels.forEach(level => {
+						const {
+							number,
+							className,
+						} = level
+						const reg = new RegExp('^#{' + number + '}\\s(.+)', 'gim')
+						newString = replaceString(newString, reg, className)
+					})
+				}
+				if (levels === 'all') {
+					const {
+						classNames,
+					} = option
+					if (typeof classNames === 'object' && !Array.isArray(classNames)) {
+						Object
+							.keys(classNames)
+							.forEach((key, index) => {
+								const newIndex = index + 1
+								const reg = new RegExp('^#{' + newIndex + '}\\s(.+)', 'gim')
+								newString = replaceString(newString, reg, classNames[key])
+							})
+					}
+				}
 			}
-			if (levels === 'all') {
+
+			// FONT
+
+			if (title === 'font') {
 				const {
-					classNames,
+					font,
+					fonts,
 				} = option
-				if (typeof classNames === 'object' && !Array.isArray(classNames)) {
+				if (typeof font === 'object' && !Array.isArray(font)) {
+					newString = fontsChecking(font, newString)
+				}
+				if (typeof fonts === 'object' && Array.isArray(fonts)) {
+					fonts.forEach(font => {
+						newString = fontsChecking(font, newString)
+					})
+				}
+				if (fonts === 'all') {
+					const {
+						classNames
+					} = option
 					Object
 						.keys(classNames)
 						.forEach((key, index) => {
 							const newIndex = index + 1
-							const reg = new RegExp('^#{' + newIndex + '}\\s(.+)', 'gim')
-							newString = replaceString(newString, reg, classNames[key])
+							if (key === 'bold') {
+								regulars.bold.forEach(reg => {
+									newString = replaceString(newString, reg, classNames[key])
+								})
+							}
+							if (key === 'inclined') {
+								regulars.inclined.forEach(reg => {
+									newString = replaceString(newString, reg, classNames[key])
+								})
+							}
+							if (key === 'strike') {
+								newString = replaceString(newString, regulars.strike, classNames[key])
+							}
 						})
 				}
 			}
-		}
 
-		// FONT CHECKING
+			// LINE BREAK
 
-		if (title === 'font' && included === true) {
-			const {
-				font,
-				fonts,
-			} = option
-			if (typeof font === 'object' && !Array.isArray(font)) {
-				newString = fontsChecking(font, newString)
-			}
-			if (typeof fonts === 'object' && Array.isArray(fonts)) {
-				fonts.forEach(font => {
-					newString = fontsChecking(font, newString)
-				})
-			}
-			if (fonts === 'all') {
+			if (title === 'line-break') {
 				const {
-					classNames
+					className,
+					allowed,
 				} = option
-				Object
-					.keys(classNames)
-					.forEach((key, index) => {
-						const newIndex = index + 1
-						if (key === "bold") {
-							regulars.bold.forEach(reg => {
-								newString = replaceString(newString, reg, classNames[key])
-							})
-						}
-						if (key === "inclined") {
-							regulars.inclined.forEach(reg => {
-								newString = replaceString(newString, reg, classNames[key])
-							})
-						}
-						if (key === "strike") {
-							newString = replaceString(newString, regulars.strike, classNames[key])
-						}
-					})
+				if (allowed === 'all') {
+					const reg = new RegExp('^(\\*{3,}|-{3,})$', 'gim')
+					newString = replaceString(newString, reg, className, true)
+				} else if (typeof allowed === 'string') {
+					const reg = new RegExp('^(\\' + allowed + '{3,})$', 'gim')
+					newString = replaceString(newString, reg, className, true)
+				}
 			}
 		}
 	})
 	return newString
 }
-
-// const regs = [
-// 	/\\*\\*\\s?([^*].+?)\\s?\\*\\*/gim,
-// 	/__\\s?([^*].+?)\\s?__/gim,
-// 	/\\*\\s?([^*].+?)\\s?\\*/gim,
-// 	/_\\s?([^*].+?)\\s?_/gim,
-// 	/~~\\s?(.+?)\\s?~~/gim,
-// ]
