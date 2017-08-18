@@ -12,7 +12,8 @@ export default (font, newString) => {
 			const screen = '\\' + allowed + '\\' + allowed
 			const reg = new RegExp(screen + '\\s?([^*].+?)\\s?' + screen, 'gim')
 			newString = replaceString(newString, reg, className)
-		} else if (allowed === 'all') {
+		}
+		if (allowed === 'all') {
 			const reg1 = new RegExp('\\*\\*\\s?([^*].+?)\\s?\\*\\*', 'gim')
 			const reg2 = new RegExp('__\\s?([^*].+?)\\s?__', 'gim')
 			newString = replaceString(newString, reg1, className)
@@ -24,7 +25,8 @@ export default (font, newString) => {
 			const screen = '\\' + allowed
 			const reg = new RegExp(screen + '\\s?([^*].+?)\\s?' + screen, 'gim')
 			newString = replaceString(newString, reg, className)
-		} else if (allowed === 'all') {
+		}
+		if (allowed === 'all') {
 			const reg1 = new RegExp('\\*\\s?([^*].+?)\\s?\\*', 'gim')
 			const reg2 = new RegExp('_\\s?([^*].+?)\\s?_', 'gim')
 			newString = replaceString(newString, reg1, className)
