@@ -6,7 +6,9 @@ module.exports = {
 
     output: {
         path: path.resolve(__dirname, './lib'),
-        filename: 'markdown-html-parser.min.js'
+        filename: 'markdown-html-parser.min.js',
+	    library: 'markdown-html-parser.min',
+	    libraryTarget: 'umd'
     },
 
     module: {

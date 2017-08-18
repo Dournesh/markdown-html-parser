@@ -2,7 +2,7 @@
   "name": "markdown-html-parser",
   "version": "1.0.0",
   "description": "Markdown - Html parser using regular expressions",
-  "main": "index.js",
+  "main": "lib/markdown-html-parser.min.js",
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
