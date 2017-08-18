@@ -25,6 +25,16 @@ export default (string, reg, className, meta) => {
 					return generateParsedString(className, null, {type, url, alt})
 				}
 			)
+	} else if (type === 'list') {
+		return string
+			.replace(
+				reg,
+				(...args) => {
+					const val1 = args[1]
+					const val2 = args[2]
+					return generateParsedString(className, val1 + ' ' + val2, {type})
+				}
+			)
 	} else {
 		return string
 			.replace(

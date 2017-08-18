@@ -92,7 +92,7 @@ export default (string, options) => {
 			}
 
 			// LINE BREAK
-
+			console.log(option)
 			if (title === 'line-break') {
 				const {
 					className,
@@ -115,7 +115,7 @@ export default (string, options) => {
 					allowed
 				} = option
 				if (allowed === 'all') {
-					const reg = new RegExp('^[*+-]\\s([^*]+)', 'gim')
+					const reg = new RegExp('^[-+*]\\s(.+)', 'gim')
 					newString = replaceString(newString, reg, className, {type: title})
 				} else if (typeof allowed === 'string') {
 					const reg = new RegExp('^\\' + allowed + '\\s([^*].+)', 'gim')
@@ -128,6 +128,7 @@ export default (string, options) => {
 			// LIST
 
 			if (title === 'list') {
+				console.log(1)
 				const {
 					className,
 				} = option
@@ -152,6 +153,26 @@ export default (string, options) => {
 					className,
 				} = option
 				const reg = new RegExp('!\\[(.+)\\]\\((.+)\\)', 'gim')
+				newString = replaceString(newString, reg, className, {type: title})
+			}
+
+			// CODE
+
+			if (title === 'code') {
+				const {
+					className,
+				} = option
+				const reg = new RegExp('`{1,2}\\s?<(.+)>\\s?`{1,2}', 'gim')
+				newString = replaceString(newString, reg, className, {type: title})
+			}
+
+			// BLOCKQUOTE
+
+			if (title === 'blockquote') {
+				const {
+					className,
+				} = option
+				const reg = new RegExp('^>\\s(.+)', 'gim')
 				newString = replaceString(newString, reg, className, {type: title})
 			}
 		}
